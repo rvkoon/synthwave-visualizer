@@ -50,6 +50,7 @@ source.connect(audioCtx.destination);
 let data = new Uint8Array(analyser.frequencyBinCount);
 
 function loopWhileMusicIsPlaying() {
+  audioCtx.resume();
   animationFrame = requestAnimationFrame(loopWhileMusicIsPlaying);
   analyser.getByteFrequencyData(data);
   bars.forEach(function (bar, idx) {
