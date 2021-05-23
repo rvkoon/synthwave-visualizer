@@ -6,6 +6,7 @@ let isPlaying = false;
 let winH = 0;
 let needRequestFrame = false;
 let bars = null;
+const frequencies = [200, 300, 400, 500, 600, 700, 800, 1000, 1500, 2000];
 
 // INIT
 
@@ -42,21 +43,18 @@ window.onload = initPage();
 
 let audioCtx = new AudioContext();
 let analyser = audioCtx.createAnalyser();
-analyser.fftSize = 128;
+analyser.fftSize = 32;
 let source = audioCtx.createMediaElementSource(audioBox);
 source.connect(analyser);
 source.connect(audioCtx.destination);
 let data = new Uint8Array(analyser.frequencyBinCount);
 
 function loopWhileMusicIsPlaying() {
+  animationFrame = requestAnimationFrame(loopWhileMusicIsPlaying);
   analyser.getByteFrequencyData(data);
   bars.forEach(function (bar, idx) {
-    const percentage = (data[idx + 6] * 100) / 255;
-    bar.style.height = (winH * (percentage / 100)) / 2 + "px";
+    bar.style.height = data[Math.ceil((data.length / 12) * idx + 1)] + "px";
   });
-  setTimeout(function () {
-    animationFrame = requestAnimationFrame(loopWhileMusicIsPlaying);
-  }, 10);
 }
 
 // EVENTS
